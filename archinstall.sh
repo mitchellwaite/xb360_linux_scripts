@@ -59,13 +59,14 @@ mkfs.ext4 -L rootfs "$P3"
 ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P3")
 
 echo
-echo "Root PARTUUID:"
-echo "$ROOT_PARTUUID"
+echo "Root PARTUUID: $ROOT_PARTUUID"
 
-mkdir /mnt/xell
+mkdir /mnt/xell || /bin/true
+umount /mnt/xell || /bin/true
 mount "$P1" /mnt/xell
 
-mkdir /mnt/archpower
+mkdir /mnt/archpower || /bin/true
+umount /mnt/archpower || /bin/true
 mount "$P1" /mnt/archpower
 
 # Create a kboot config file with the following options

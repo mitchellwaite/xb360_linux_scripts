@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 clear
 
 echo "Arch Linux installer for Xbox 360"
@@ -32,7 +30,9 @@ read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # unmount everything on the drive
-umount $DISK* || /bin/true
+umount $DISK*
+
+set -euo pipefail
 
 # Wipe the drive
 wipefs -a "$DISK"

@@ -31,8 +31,11 @@ printf "Type YES to continue: "
 read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
+# unmount everything on the drive
+umount $DISK?*
+
 # Wipe the drive
-wipefs -f -a "$DISK"
+wipefs -a "$DISK"
 
 # Create an MBR partition table
 parted -s "$DISK" mklabel msdos

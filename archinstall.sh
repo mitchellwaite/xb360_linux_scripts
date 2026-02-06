@@ -32,7 +32,7 @@ read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # Wipe the drive
-wipefs -a "$DISK"
+wipefs -f -a "$DISK"
 
 # Create an MBR partition table
 parted -s "$DISK" mklabel msdos

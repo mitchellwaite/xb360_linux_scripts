@@ -97,16 +97,26 @@ Server = https://repo.wii-linux.org/arch/extra/any
 Server = https://repo.wii-linux.org/arch/extra/\$arch
 EOF
 
+echo "Installing base system..."
 pacstrap -KMPC ~/pacman360.conf /mnt/archpower base archpower-keyring linux-xenon networkmanager vim nano less wget openssh fastfetch
+
+echo "Initializing pacman keyring..."
 arch-chroot /mnt/archpower pacman-key --init
+
+echo "Setting hostname..."
 arch-chroot /mnt/archpower sh -c 'echo arch360 > /etc/hostname'
+
+echo "Enabling Services..."
 arch-chroot /mnt/archpower systemctl enable NetworkManager
 arch-chroot /mnt/archpower systemctl enable systemd-timesyncd
 arch-chroot /mnt/archpower systemctl enable getty@tty1.service
+
+echo "Setting root password..."
 arch-chroot /mnt/archpower sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA256/' /etc/login.defs
-arch-chroot /mnt/archpower sed  -i 's/try_first_pass nullok shadow/try_first_pass nullok shadow sha256/'
+arch-chroot /mnt/archpower sed  -i 's/try_first_pass nullok shadow/try_first_pass nullok shadow sha256/' /etc/pam.d/system-auth
 echo "root:password" | arch-chroot /mnt/archpower chpasswd
 
+echo "Creating XeLL boot files..."
 cp /mnt/archpower/usr/lib/modules/*/zImage.xenon /mnt/xell/vmlinuz-linux-xenon
 
 # Create a kboot config file with the following options
@@ -121,3 +131,5 @@ echo "speedup=1" >> /mnt/xell/kboot.conf
 echo "videomode=8" >> /mnt/xell/kboot.conf
 echo "archpower=\"uda0:/vmlinuz-linux-xenon root=PARTUUID=$ROOT_PARTUUID rw console=tty0 console=ttyS0,115200n8 panic=60 coherent_pool=16M\"" >> /mnt/xell/kboot.conf
 
+echo "Done!"
+echo ""

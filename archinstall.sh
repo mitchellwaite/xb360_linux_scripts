@@ -72,7 +72,7 @@ mount "$P1" /mnt/xell
 
 mkdir /mnt/archpower || /bin/true
 umount /mnt/archpower || /bin/true
-mount "$P1" /mnt/archpower
+mount "$P3" /mnt/archpower
 
 # Create a pacman.conf for the chroot install
 cat <<EOF > ~/pacman360.conf

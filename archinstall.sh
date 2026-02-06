@@ -12,7 +12,7 @@ grep -qi '^ID=arch' /etc/os-release || {
 }
 
 # Make sure we've got the arch install scripts and the qemu usermode emulation installed
-pacman -Sy --needed --noconfirm arch-install-scripts qemu-user-static qemu-user-static-binfmt
+pacman -Sy --noconfirm arch-install-scripts qemu-user-static qemu-user-static-binfmt
 
 systemctl restart systemd-binfmt
 

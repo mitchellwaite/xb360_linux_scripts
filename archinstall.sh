@@ -14,19 +14,19 @@ grep -qi '^ID=arch' /etc/os-release || {
 # Make sure we've got the arch install scripts and the qemu usermode emulation installed
 pacman -Sy --needed arch-install-scripts qemu-user-static > /dev/null
 
-echo "Arch Linux installer for Xbox 360"
-
 echo "Available storage devices:"
 lsblk -d -o NAME,SIZE,MODEL,TYPE | grep disk
 echo
 
-read -rp "Enter target disk (e.g. sda, nvme0n1): " DISK
-DISK="/dev/$DISK"
+printf "Enter target disk (e.g. sda, nvme0n1): "
+read RDDISK < /dev/tty
+DISK="/dev/$RDDISK"
 
 [ -b "$DISK" ] || { echo "Invalid block device"; exit 1; }
 
 echo "WARNING: This script will erase all data on $DISK"
-read -rp "Type YES to continue: " CONFIRM
+printf "Type YES to continue: "
+read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # Wipe the drive

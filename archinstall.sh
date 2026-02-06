@@ -2,13 +2,17 @@
 
 set -euo pipefail
 
+echo "Arch Linux installer for Xbox 360"
+echo "---------------------------------"
+echo ""
+
 grep -qi '^ID=arch' /etc/os-release || {
     echo "This script must be run on Arch Linux"
     exit 1
 }
 
 # Make sure we've got the arch install scripts and the qemu usermode emulation installed
-pacman -Sy --needed arch-install-scripts qemu-user-static
+pacman -Sy --needed arch-install-scripts qemu-user-static > /dev/null
 
 echo "Arch Linux installer for Xbox 360"
 

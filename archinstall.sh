@@ -98,14 +98,14 @@ Server = https://repo.wii-linux.org/arch/extra/\$arch
 EOF
 
 pacstrap -KMC ~/pacman360.conf /mnt/archpower base archpower-keyring linux-xenon networkmanager vim nano less wget openssh
-arch-chroot /mnt/archpower "pacman-key --init"
+arch-chroot /mnt/archpower pacman-key --init
 arch-chroot /mnt/archpower pacman-key
-arch-chroot /mnt/archpower "echo arch360 > /etc/hostname"
-arch-chroot /mnt/archpower "systemctl enable NetworkManager"
-arch-chroot /mnt/archpower "systemctl enable systemd-timesyncd"
-arch-chroot /mnt/archpower "systemctl enable getty@tty1.service"
-arch-chroot /mnt/archpower "sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA256/' /etc/login.defs"
-arch-chroot /mnt/archpower "echo password | passwd --stdin"
+arch-chroot /mnt/archpower echo arch360 > /etc/hostname
+arch-chroot /mnt/archpower systemctl enable NetworkManager
+arch-chroot /mnt/archpower systemctl enable systemd-timesyncd
+arch-chroot /mnt/archpower systemctl enable getty@tty1.service
+arch-chroot /mnt/archpower sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA256/' /etc/login.defs
+arch-chroot /mnt/archpower echo password | passwd --stdin
 
 cp /mnt/archpower/usr/lib/modules/*/zImage.xenon /mnt/xell/vmlinuz-linux-xenon
 

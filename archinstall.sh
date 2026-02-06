@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+clear
+
 echo "Arch Linux installer for Xbox 360"
 echo "---------------------------------"
 echo ""
@@ -68,6 +70,39 @@ mount "$P1" /mnt/xell
 mkdir /mnt/archpower || /bin/true
 umount /mnt/archpower || /bin/true
 mount "$P1" /mnt/archpower
+
+# Create a pacman.conf for the chroot install
+cat <<EOF > ~/pacman360.conf
+[options]
+HoldPkg     = pacman glibc
+Architecture = powerpc
+Color
+CheckSpace
+ParallelDownloads = 5
+DisableDownloadTimeout
+SigLevel    = Required DatabaseOptional Never
+LocalFileSigLevel = Optional
+[base-any]
+Server = https://repo.archlinuxpower.org/base/any
+[base]
+Server = https://repo.archlinuxpower.org/base/\$arch
+[extra-any]
+Server = https://repo.wii-linux.org/arch/extra/any
+[extra]
+Server = https://repo.wii-linux.org/arch/extra/\$arch
+EOF
+
+pacstrap -KMC ~/pacman360.conf /mnt/archpower base archpower-keyring linux-xenon networkmanager vim nano less wget openssh
+arch-chroot /mnt/archpower "pacman-key --init"
+arch-chroot /mnt/archpower pacman-key
+arch-chroot /mnt/archpower "echo arch360 > /etc/hostname"
+arch-chroot /mnt/archpower "systemctl enable NetworkManager"
+arch-chroot /mnt/archpower "systemctl enable systemd-timesyncd"
+arch-chroot /mnt/archpower "systemctl enable getty@tty1.service"
+arch-chroot /mnt/archpower "sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA256/' /etc/login.defs"
+arch-chroot /mnt/archpower "echo password | passwd --stdin"
+
+cp /mnt/archpower/usr/lib/modules/*/zImage.xenon /mnt/xell/vmlinuz-linux-xenon
 
 # Create a kboot config file with the following options
 #

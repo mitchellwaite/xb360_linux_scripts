@@ -33,7 +33,7 @@ read CONFIRM < /dev/tty
 wipefs -a "$DISK"
 
 # Create an MBR partition table
-pated -s "$DISK" mklabel msdos
+parted -s "$DISK" mklabel msdos
 
 # Create partitions
 # 1: 4gb fat32

@@ -12,7 +12,9 @@ grep -qi '^ID=arch' /etc/os-release || {
 }
 
 # Make sure we've got the arch install scripts and the qemu usermode emulation installed
-pacman -Sy --needed arch-install-scripts qemu-user-static > /dev/null
+pacman -Sy --needed --noconfirm arch-install-scripts qemu-user-static qemu-user-static-binfmt > /dev/null
+
+systemctl restart systemd-binfmt
 
 echo "Available storage devices:"
 lsblk -d -o NAME,SIZE,MODEL,TYPE | grep disk

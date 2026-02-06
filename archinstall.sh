@@ -32,7 +32,7 @@ read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # unmount everything on the drive
-umount $DISK?* || /bin/true
+umount $DISK* || /bin/true
 
 # Wipe the drive
 wipefs -a "$DISK"

@@ -44,11 +44,9 @@ parted -s "$DISK" mklabel msdos
 
 # Create partitions
 # 1: 4gb fat32
-# 2: 8gb swap
-# 3: Remainder: ext4
+# 2: Remainder: ext4
 parted -s "$DISK" mkpart primary fat32 1MiB 4097MiB \
-                  mkpart primary linux-swap 4097MiB 12289MiB \
-                  mkpart primary ext4 12289MiB 100%
+                  mkpart primary ext4 4097MiB 100%
 
 partprobe  "$DISK"
 sleep 1
@@ -56,14 +54,12 @@ sleep 1
 # Theoretically we'd want to handle NVMEs here too... but like... 360 no support. yolo.
 P1="${DISK}1"
 P2="${DISK}2"
-P3="${DISK}3"
 
 mkfs.fat -F32 -n XELL "$P1"
-mkswap "$P2"
-mkfs.ext4 -L rootfs "$P3"
+mkfs.ext4 -L rootfs "$P2"
 
 # Grab PARTUUID for kernel cmdline
-ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P3")
+ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
 
 echo
 echo "Root PARTUUID: $ROOT_PARTUUID"
@@ -74,7 +70,7 @@ mount "$P1" /mnt/xell
 
 mkdir /mnt/archpower || /bin/true
 umount /mnt/archpower || /bin/true
-mount "$P3" /mnt/archpower
+mount "$P2" /mnt/archpower
 
 # Create a pacman.conf for the chroot install
 cat <<EOF > ~/pacman360.conf
@@ -116,6 +112,10 @@ arch-chroot /mnt/archpower sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA
 arch-chroot /mnt/archpower sed  -i 's/try_first_pass nullok shadow/try_first_pass nullok shadow sha256/' /etc/pam.d/system-auth
 echo "root:password" | arch-chroot /mnt/archpower chpasswd
 
+echo "Enabling swap space..."
+arch-chroot /mnt/archpower mkswap -U clear --size 4G --file /swapfile
+arch-chroot /mnt/archpower sh -c 'echo "/swapfile none swap defaults 0 0" >> /etc/fstab'
+
 echo "Creating XeLL boot files..."
 cp /mnt/archpower/usr/lib/modules/*/zImage.xenon /mnt/xell/vmlinuz-linux-xenon
 
@@ -129,7 +129,7 @@ echo "#KBOOTCONFIG" > /mnt/xell/kboot.conf
 echo "timeout=0" >> /mnt/xell/kboot.conf
 echo "speedup=1" >> /mnt/xell/kboot.conf
 echo "videomode=8" >> /mnt/xell/kboot.conf
-echo "archpower=\"uda0:/vmlinuz-linux-xenon root=PARTUUID=$ROOT_PARTUUID rw console=tty0 console=ttyS0,115200n8 panic=60 coherent_pool=16M\"" >> /mnt/xell/kboot.conf
+echo "archpower=\"game:/vmlinuz-linux-xenon root=PARTUUID=$ROOT_PARTUUID rw console=tty0 console=ttyS0,115200n8 panic=60 coherent_pool=16M\"" >> /mnt/xell/kboot.conf
 
 echo "Done!"
 echo ""

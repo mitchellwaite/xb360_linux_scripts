@@ -131,5 +131,12 @@ echo "speedup=1" >> /mnt/xell/kboot.conf
 echo "videomode=8" >> /mnt/xell/kboot.conf
 echo "archpower=\"game:/vmlinuz-linux-xenon root=PARTUUID=$ROOT_PARTUUID rw console=tty0 console=ttyS0,115200n8 panic=60 coherent_pool=16M\"" >> /mnt/xell/kboot.conf
 
+echo "Unmounting Partitions..."
+umount $P1
+umount $P2
+
+rmdir /mnt/archpower
+rmdir /mnt/xell
+
 echo "Done!"
 echo ""

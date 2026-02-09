@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 clear
 
 echo "Arch Linux installer for Xbox 360"
@@ -32,9 +34,7 @@ read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # unmount everything on the drive
-umount $DISK*
-
-set -euo pipefail
+umount -q $DISK*
 
 # Wipe the drive
 wipefs -a "$DISK"
@@ -132,8 +132,7 @@ echo "videomode=8" >> /mnt/xell/kboot.conf
 echo "archpower=\"game:/vmlinuz-linux-xenon root=PARTUUID=$ROOT_PARTUUID rw console=tty0 console=ttyS0,115200n8 panic=60 coherent_pool=16M\"" >> /mnt/xell/kboot.conf
 
 echo "Unmounting Partitions..."
-umount $P1
-umount $P2
+umount -q $DISK*
 
 rmdir /mnt/archpower
 rmdir /mnt/xell

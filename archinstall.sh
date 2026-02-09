@@ -106,6 +106,8 @@ echo "Enabling Services..."
 arch-chroot /mnt/archpower systemctl enable NetworkManager
 arch-chroot /mnt/archpower systemctl enable systemd-timesyncd
 arch-chroot /mnt/archpower systemctl enable getty@tty1.service
+arch-chroot /mnt/archpower sh -c 'echo "#!/bin/sh" > /root/.xinitrc'
+arch-chroot /mnt/archpower sh -c 'echo "exec jwm" > /root/.xinitrc'
 
 echo "Setting root password..."
 arch-chroot /mnt/archpower sed  -i 's/ENCRYPT_METHOD YESCRYPT/ENCRYPT_METHOD SHA256/' /etc/login.defs

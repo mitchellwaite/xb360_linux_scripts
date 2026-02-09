@@ -58,12 +58,6 @@ P2="${DISK}2"
 mkfs.fat -F32 -n XELL "$P1"
 mkfs.ext4 -FL rootfs "$P2"
 
-# Grab PARTUUID for kernel cmdline
-ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
-
-echo
-echo "Root PARTUUID: $ROOT_PARTUUID"
-
 mkdir /mnt/xell || /bin/true
 umount /mnt/xell || /bin/true
 mount "$P1" /mnt/xell
@@ -119,6 +113,13 @@ arch-chroot /mnt/archpower mkswap -U clear --size 4G --file /swapfile
 arch-chroot /mnt/archpower sh -c 'echo "/swapfile none swap defaults 0 0" >> /etc/fstab'
 
 echo "Creating XeLL boot files..."
+
+# Grab PARTUUID for kernel cmdline
+ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
+
+echo
+echo "Root PARTUUID: $ROOT_PARTUUID"
+
 cp /mnt/archpower/usr/lib/modules/*/zImage.xenon /mnt/xell/vmlinuz-linux-xenon
 
 # Create a kboot config file with the following options

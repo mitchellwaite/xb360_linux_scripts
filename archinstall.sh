@@ -94,7 +94,7 @@ Server = https://repo.wii-linux.org/arch/extra/\$arch
 EOF
 
 echo "Installing base system..."
-pacstrap -KMPC ~/pacman360.conf /mnt/archpower base archpower-keyring linux-xenon networkmanager vim nano less wget openssh fastfetch jwm xorg-xinit xterm xorg-server
+pacstrap -KMPC ~/pacman360.conf /mnt/archpower base archpower-keyring linux-xenon networkmanager vim nano less wget openssh fastfetch jwm xorg-xinit xterm xorg-server less
 
 echo "Initializing pacman keyring..."
 arch-chroot /mnt/archpower pacman-key --init

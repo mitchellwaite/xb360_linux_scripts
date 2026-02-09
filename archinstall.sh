@@ -34,7 +34,7 @@ read CONFIRM < /dev/tty
 [ "$CONFIRM" = "YES" ] || exit 1
 
 # unmount everything on the drive
-umount -q $DISK*
+umount -q $DISK* || /bin/true
 
 # Wipe the drive
 wipefs -a "$DISK"

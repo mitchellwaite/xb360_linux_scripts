@@ -56,7 +56,7 @@ P1="${DISK}1"
 P2="${DISK}2"
 
 mkfs.fat -F32 -n XELL "$P1"
-mkfs.ext4 -L rootfs "$P2"
+mkfs.ext4 -FL rootfs "$P2"
 
 # Grab PARTUUID for kernel cmdline
 ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
